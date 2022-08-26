@@ -12,6 +12,10 @@ namespace _01_ef_entities
         {
             //this.Database.EnsureDeleted();
             //this.Database.EnsureCreated();
+
+            // Use Migrations instead: (install NuGet: EFCore.Tools)
+            // - add-migration <MigrationName> - add new migration with available changes
+            // - update-migration              - update the database by the newest migration
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -20,7 +24,6 @@ namespace _01_ef_entities
 
             optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuperAirlinesDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
