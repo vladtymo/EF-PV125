@@ -28,7 +28,7 @@ namespace _01_ef_entities
         {
             base.OnModelCreating(modelBuilder);
 
-            // Initialization
+            // -------------- Initialization
             modelBuilder.Entity<Airplane>().HasData(new Airplane[]
                 {
                     new Airplane()
@@ -62,6 +62,41 @@ namespace _01_ef_entities
                     }
                 }
             );
+
+            // -------------- FLuent API configurations
+            // for Airplanes
+            modelBuilder.Entity<Airplane>().Property(a => a.Model)  // get property to configurate
+                .IsRequired()                                       // not null
+                .HasMaxLength(100);                                 // nvarchar(100)
+
+            // for Clients
+            modelBuilder.Entity<Client>().ToTable("Passengers");    // set table name
+            modelBuilder.Entity<Client>().Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("FirstName");                      
+            modelBuilder.Entity<Client>().Property(c => c.Email)  
+               .IsRequired()                                      
+               .HasMaxLength(100);
+
+            // for Flights
+            modelBuilder.Entity<Flight>().HasKey(f => f.Number);    // set primary key
+            modelBuilder.Entity<Flight>().Property(f => f.DepartureCity)
+              .IsRequired()
+              .HasMaxLength(100);
+            modelBuilder.Entity<Flight>().Property(f => f.ArrivalCity)
+              .IsRequired()
+              .HasMaxLength(100);
+
+            // -------------- Relationships configuration
+            // Relationship Type: One to Many (1...*)
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.Airplane)
+                .WithMany(a => a.Flights)
+                .HasForeignKey(f => f.AirplaneId);
+
+            // Relationship Type: Many to Many (*...*)
+            modelBuilder.Entity<Flight>().HasMany(f => f.Clients).WithMany(c => c.Flights);
         }
 
         ///////////// Collections

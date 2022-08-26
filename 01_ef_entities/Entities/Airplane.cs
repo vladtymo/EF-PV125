@@ -6,7 +6,6 @@ namespace _01_ef_entities
     public class Airplane
     {
         public int Id { get; set; }
-        [Required, MaxLength(100)] 
         public string Model { get; set; }
         public int MaxPassengers { get; set; }
 
