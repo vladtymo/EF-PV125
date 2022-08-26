@@ -29,39 +29,8 @@ namespace _01_ef_entities
             base.OnModelCreating(modelBuilder);
 
             // -------------- Initialization
-            modelBuilder.Entity<Airplane>().HasData(new Airplane[]
-                {
-                    new Airplane()
-                    {
-                        Id = 1,
-                        Model = "Boeing 765",
-                        MaxPassengers = 1200
-                    }
-                }
-            );
-
-            modelBuilder.Entity<Flight>().HasData(new Flight[]
-                {
-                    new Flight()
-                    {
-                        Number = 1,
-                        AirplaneId = 1,
-                        DepartureCity = "Kyiv",
-                        ArrivalCity = "Lviv",
-                        DepartureTime = new DateTime(2022, 8, 25, 13, 30, 0),
-                        ArrivalTime = new DateTime(2022, 8, 25, 18, 25, 0)
-                    },
-                    new Flight()
-                    {
-                        Number = 2,
-                        AirplaneId = 1,
-                        DepartureCity = "Warsaw",
-                        ArrivalCity = "Lviv",
-                        DepartureTime = new DateTime(2022, 9, 12, 15, 30, 0),
-                        ArrivalTime = new DateTime(2022, 9, 13, 05, 0, 0)
-                    }
-                }
-            );
+            modelBuilder.SeedAirplanes();
+            modelBuilder.SeedFlights();
 
             // -------------- FLuent API configurations
             // for Airplanes
