@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace _01_ef_entities
+namespace data_access
 {
     //////////////// Entities
     public class Client

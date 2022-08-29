@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace _01_ef_entities.Migrations
+namespace data_access.Migrations
 {
     public partial class AddRating : Migration
     {

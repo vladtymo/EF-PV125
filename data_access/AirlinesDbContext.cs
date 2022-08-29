@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _01_ef_entities
+namespace data_access
 {
     public class AirlinesDbContext : DbContext
     {

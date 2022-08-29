@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _01_ef_entities
+namespace data_access
 {
     public static class DbInitializer
     {
