@@ -28,10 +28,6 @@ namespace data_access
         {
             base.OnModelCreating(modelBuilder);
 
-            // -------------- Initialization
-            modelBuilder.SeedAirplanes();
-            modelBuilder.SeedFlights();
-
             // -------------- FLuent API configurations
             // for Airplanes
             modelBuilder.Entity<Airplane>().Property(a => a.Model)  // get property to configurate
@@ -39,6 +35,7 @@ namespace data_access
                 .HasMaxLength(100);                                 // nvarchar(100)
 
             // for Clients
+            modelBuilder.Entity<Client>().HasKey(c => c.CredentialsId);
             modelBuilder.Entity<Client>().ToTable("Passengers");    // set table name
             modelBuilder.Entity<Client>().Property(c => c.Name)
                 .IsRequired()
@@ -66,6 +63,16 @@ namespace data_access
 
             // Relationship Type: Many to Many (*...*)
             modelBuilder.Entity<Flight>().HasMany(f => f.Clients).WithMany(c => c.Flights);
+
+            // Relationship Type: One to One (1...1)
+            modelBuilder.Entity<Client>().HasOne(c => c.Credentials).WithOne(c => c.Client)
+                .HasForeignKey<Credentials>(c => c.ClientId);
+
+            // -------------- Initialization
+            modelBuilder.SeedAirplanes();
+            modelBuilder.SeedFlights();
+            modelBuilder.SeedCredentials(); // principal table
+            modelBuilder.SeedClients();     // dependent table
         }
 
         ///////////// Collections

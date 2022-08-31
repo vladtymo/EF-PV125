@@ -7,41 +7,45 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using data_access;
 
+#nullable disable
+
 namespace data_access.Migrations
 {
     [DbContext(typeof(AirlinesDbContext))]
-    [Migration("20220824153631_Initial")]
+    [Migration("20220831160448_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.17")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("ClientFlight", b =>
                 {
-                    b.Property<int>("ClientsId")
+                    b.Property<int>("ClientsCredentialsId")
                         .HasColumnType("int");
 
                     b.Property<int>("FlightsNumber")
                         .HasColumnType("int");
 
-                    b.HasKey("ClientsId", "FlightsNumber");
+                    b.HasKey("ClientsCredentialsId", "FlightsNumber");
 
                     b.HasIndex("FlightsNumber");
 
                     b.ToTable("ClientFlight");
                 });
 
-            modelBuilder.Entity("_01_ef_entities.Airplane", b =>
+            modelBuilder.Entity("data_access.Airplane", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("MaxPassengers")
                         .HasColumnType("int");
@@ -64,20 +68,21 @@ namespace data_access.Migrations
                         });
                 });
 
-            modelBuilder.Entity("_01_ef_entities.Client", b =>
+            modelBuilder.Entity("data_access.Client", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CredentialsId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CredentialsId"), 1L, 1);
 
                     b.Property<DateTime?>("Birthdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -85,17 +90,76 @@ namespace data_access.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("FirstName");
 
-                    b.HasKey("Id");
+                    b.HasKey("CredentialsId");
 
-                    b.ToTable("Passengers");
+                    b.ToTable("Passengers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CredentialsId = 1,
+                            Birthdate = new DateTime(2003, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "super55@ukr.net",
+                            Name = "Viktor"
+                        },
+                        new
+                        {
+                            CredentialsId = 2,
+                            Birthdate = new DateTime(1995, 10, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "gigigi@gmail.com",
+                            Name = "Olga"
+                        });
                 });
 
-            modelBuilder.Entity("_01_ef_entities.Flight", b =>
+            modelBuilder.Entity("data_access.Credentials", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique()
+                        .HasFilter("[ClientId] IS NOT NULL");
+
+                    b.ToTable("Credentials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Login = "fly3434",
+                            Password = "Qwer23"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Login = "man66",
+                            Password = "Blabla3"
+                        });
+                });
+
+            modelBuilder.Entity("data_access.Flight", b =>
                 {
                     b.Property<int>("Number")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Number"), 1L, 1);
 
                     b.Property<int>("AirplaneId")
                         .HasColumnType("int");
@@ -115,6 +179,9 @@ namespace data_access.Migrations
 
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
 
                     b.HasKey("Number");
 
@@ -145,22 +212,31 @@ namespace data_access.Migrations
 
             modelBuilder.Entity("ClientFlight", b =>
                 {
-                    b.HasOne("_01_ef_entities.Client", null)
+                    b.HasOne("data_access.Client", null)
                         .WithMany()
-                        .HasForeignKey("ClientsId")
+                        .HasForeignKey("ClientsCredentialsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("_01_ef_entities.Flight", null)
+                    b.HasOne("data_access.Flight", null)
                         .WithMany()
                         .HasForeignKey("FlightsNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("_01_ef_entities.Flight", b =>
+            modelBuilder.Entity("data_access.Credentials", b =>
                 {
-                    b.HasOne("_01_ef_entities.Airplane", "Airplane")
+                    b.HasOne("data_access.Client", "Client")
+                        .WithOne("Credentials")
+                        .HasForeignKey("data_access.Credentials", "ClientId");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("data_access.Flight", b =>
+                {
+                    b.HasOne("data_access.Airplane", "Airplane")
                         .WithMany("Flights")
                         .HasForeignKey("AirplaneId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -169,9 +245,15 @@ namespace data_access.Migrations
                     b.Navigation("Airplane");
                 });
 
-            modelBuilder.Entity("_01_ef_entities.Airplane", b =>
+            modelBuilder.Entity("data_access.Airplane", b =>
                 {
                     b.Navigation("Flights");
+                });
+
+            modelBuilder.Entity("data_access.Client", b =>
+                {
+                    b.Navigation("Credentials")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

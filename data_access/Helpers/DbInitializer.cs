@@ -24,6 +24,48 @@ namespace data_access
             );
         }
 
+        public static void SeedCredentials(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Credentials>().HasData(new Credentials[]
+                {
+                    new Credentials()
+                    {
+                        Id = 1,
+                        Login = "fly3434",
+                        Password = "Qwer23"
+                    },
+                    new Credentials()
+                    {
+                        Id = 2,
+                        Login = "man66",
+                        Password = "Blabla3"
+                    }
+                }
+            );
+        }
+
+        public static void SeedClients(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Client>().HasData(new Client[]
+                {
+                    new Client()
+                    {
+                        CredentialsId = 1,
+                        Name = "Viktor",
+                        Birthdate = new DateTime(2003, 1, 5),
+                        Email = "super55@ukr.net"
+                    },
+                    new Client()
+                    {
+                        CredentialsId = 2,
+                        Name = "Olga",
+                        Birthdate = new DateTime(1995, 10, 7),
+                        Email = "gigigi@gmail.com"
+                    }
+                }
+            );
+        }
+
         public static void SeedFlights(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Flight>().HasData(new Flight[]
